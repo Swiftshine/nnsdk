@@ -31,7 +31,7 @@ class MessageQueue {
 
 public:
     MessageQueue(uintptr_t* buffer, size_t count) {
-        InitializeMessageQueue(&m_MessageQueue, buffer, count);
+        InitializeMessageQueue(&m_MessageQueue, (uint64_t*)buffer, count);
     }
 
     ~MessageQueue() { FinalizeMessageQueue(&m_MessageQueue); }
@@ -52,22 +52,22 @@ public:
         return TimedJamMessageQueue(&m_MessageQueue, data, timeSpan);
     }
 
-    void Receive(uintptr_t* outData) { ReceiveMessageQueue(outData, &m_MessageQueue); }
+    void Receive(uintptr_t* outData) { ReceiveMessageQueue((uint64_t*)outData, &m_MessageQueue); }
 
-    bool TryReceive(uintptr_t* outData) { return TryReceiveMessageQueue(outData, &m_MessageQueue); }
+    bool TryReceive(uintptr_t* outData) { return TryReceiveMessageQueue((uint64_t*)outData, &m_MessageQueue); }
 
     bool TimedReceive(uintptr_t* outData, TimeSpan timeSpan) {
-        return TimedReceiveMessageQueue(outData, &m_MessageQueue, timeSpan);
+        return TimedReceiveMessageQueue((uint64_t*)outData, &m_MessageQueue, timeSpan);
     }
 
     /// XXX: `Peek` functions could be `const`, but according to DWARF from BTD5, they
     /// are not
-    void Peek(uintptr_t* outData) { PeekMessageQueue(outData, &m_MessageQueue); }
+    void Peek(uintptr_t* outData) { PeekMessageQueue((uint64_t*)outData, &m_MessageQueue); }
 
-    bool TryPeek(uintptr_t* outData) { return TryPeekMessageQueue(outData, &m_MessageQueue); }
+    bool TryPeek(uintptr_t* outData) { return TryPeekMessageQueue((uint64_t*)outData, &m_MessageQueue); }
 
     bool TimedPeek(uintptr_t* outData, TimeSpan timeSpan) {
-        return TimedPeekMessageQueue(outData, &m_MessageQueue, timeSpan);
+        return TimedPeekMessageQueue((uint64_t*)outData, &m_MessageQueue, timeSpan);
     }
 
     operator MessageQueueType&() { return m_MessageQueue; }
